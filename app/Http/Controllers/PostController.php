@@ -14,10 +14,10 @@ class PostController extends Controller
 //    ];
     public function index()
     {
-        $postsFromDB = Post::all();
+        $posts = Post::paginate(10);
         // dd($postsFromD);
 
-       return view('posts.index',['allPosts'=>$postsFromDB]);
+       return view('posts.index',['allPosts'=>$posts]);
 
 
     }
@@ -33,10 +33,12 @@ class PostController extends Controller
         
         $postData=request()->all();
         // dd($postData);
+       
         Post::create([
             'title' => $postData['title'],
             'discription' => $postData['discription'],
             'created_at' => $postData['createdat'],
+            'user_id'=>$postData['post_creator'],
         ]);
        
         $posts = Post::all();
@@ -54,13 +56,14 @@ class PostController extends Controller
        
         // dd($dbPost2);
         return view('posts.show',[
-            'post'=>$post1,
+            'posts'=>$post1,
         ]);
     }
 
-    public function edit($id){
+    public function edit($post){
 
-        $post = Post::where('id', $id)->first();
+        // $post = Post::where('id', $post)->first();
+        $post = Post::findorfail($post);
         $users = User::all();
     //    dd($post);
 
@@ -70,34 +73,44 @@ class PostController extends Controller
         ]);
     }
 
-    public function update($id,Request $request){
+    // public function update($id,Request $request){
 
-        $post=$request->all();
-        // dd($post);
-        Post::where('id', $id)
-        ->update([
-            'title' => $post['title'],
-            'discription' => $post['discription'],
-            // 'posted_by' => $post['postedby'],
-            'created_at' => $post['created_at'],
+    //     $post=$request->all();
+    //     // dd($post);
+    //     Post::where('id', $id)
+    //     ->update([
+    //         'title' => $post['title'],
+    //         'discription' => $post['discription'],
+    //         'user_id' => $post['post_creator'],
+    //         'created_at' => $post['created_at'],
             
+    //     ]);
+
+    //     $posts = Post::all();
+
+    //     return view('posts.index',['allPosts' => $posts]);
+
+    // }
+    public function update($post,Request $request){
+        $postToUpdate = post::find($post);
+        $postToUpdate->update([
+            'title' => $request->title,
+            'discription' => $request->discription,
+            'created_at' => $request->created_at,
+            'user_id' => $request->post_creator,
         ]);
 
-        $posts = Post::all();
-
-        return view('posts.index',['allPosts' => $posts]);
-
+        // return to_route('posts.index');
+        return redirect()->route('posts.index');
+        
     }
 
 
-    public function destroy ($id){
+    public function destroy ($post){
 
-        $post = Post::where('id', $id);
-        $post->delete();
-        $posts = Post::all();
-
-       return view('posts.index',['allPosts' => $posts]);
-
+        $postToDelete = Post::find($post);
+        $postToDelete->delete();
+        return redirect()->route('posts.index');
        }
 }
 
