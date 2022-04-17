@@ -40,7 +40,7 @@
           </table>
            <!-- Pagination  -->
             <div class="flex justify-center items-center mt-10">
-              {!! $allPosts->links() !!}
+              {{-- {!! $allPosts->links() !!} --}}
           </div>
 @endsection
 <style>

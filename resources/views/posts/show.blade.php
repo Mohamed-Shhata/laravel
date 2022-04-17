@@ -33,6 +33,16 @@
 
   </div>
 </div>
+{{-- image --}}
+<div class="card my-4">
+  <div class="card-header fw-bold fs-1">
+      Image
+  </div>
+  <div class="card-body ">
+      <img src="{{$posts['image_path']}}" alt="{{$posts['title']}}" class="img-fluid">
+  </div>
+</div>
+{{-- comments --}}
 <h1 class="text-center bg-primary text-light rounded p-4">Comments</h1>
 <div>
     <form method="POST" action="{{route('comments.create' , ['postId' => $posts['id']])}}">
@@ -42,7 +52,8 @@
         <button type="submit" class="btn btn-primary btn-lg mt-3">Add</button>
     </form>
 </div>
-{{-- comments --}}
+
+
 <div class='mt-4 bg-light text-dark'>
 
     @foreach ($posts->comments as $comment)

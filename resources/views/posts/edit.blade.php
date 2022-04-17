@@ -3,7 +3,7 @@
 @section('title')Create @endsection
 
 @section('content')
-        <form class="col-6 mx-auto my-5" method="POST" action="{{route('posts.update',['post' => $post["id"] ])}}">
+        <form class="col-6 mx-auto my-5"  method="POST" enctype="multipart/form-data" action="{{route('posts.update',['post' => $post["id"] ])}}">
             @csrf
             @method('PUT')
             
@@ -26,6 +26,9 @@
               <br/>
               <input name="discription" value="{{$post['discription']}}" type="text" class="form-control" id="description"> 
                
+            </div>
+            <div class="my-3 fs-3">
+              <input class="form-control form-control-lg" name="image" id="formFileLg" type="file">
             </div>
 
               <div class="mb-3">

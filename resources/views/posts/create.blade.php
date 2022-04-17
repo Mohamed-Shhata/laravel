@@ -3,9 +3,8 @@
 @section('title')Update post @endsection
 
 @section('content')
-      <form method="POST" action="{{route('posts.store')}}" class="mt-5">
+      <form method="POST" enctype="multipart/form-data" action="{{route('posts.store')}}" class="mt-5">
         @csrf
-
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Title</label>
             <input name="title" type="text" class="form-control" id="exampleFormControlInput1">
@@ -23,7 +22,9 @@
             <br/>
             <input name="discription"  type="text" class="form-control" id="description"> 
           </div>
-
+          <div class="my-3">
+            <input class="form-control form-control-lg" name="image" id="formFileLg" type="file">
+        </div>
           <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Created At</label>
             <input name="createdat" type="date" class="form-control" id="exampleFormControlInput1">
