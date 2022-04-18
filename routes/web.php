@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController; //== require
 use App\Http\Controllers\CommentController; //== require
-
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\SocialController; //== require
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,3 +45,9 @@ Route::patch('/comments/{postId}/{commentId}', [CommentController::class, 'edit'
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Social Login
+Route::get('auth/callback/{provider}', [SocialController::class, 'callback']);
+Route::get('auth/redirect/{provider}', [SocialController::class, 'redirect']);
+
+
