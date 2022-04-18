@@ -10,6 +10,7 @@ use App\Http\Requests\UpdatePostRequest;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Support\Facades\Storage;
 
+
 class PostController extends Controller
 {
 //    private $posts = [
@@ -35,17 +36,10 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        // dd(request()->all());
-        
+        $imageName = time().'.'.$request->image->extension();
         
         $postData=request()->all();
         $slug = SlugService::createSlug(Post::class, 'slug', $postData['title']);
-        
-        $path = Storage::putFile('public', request()->file('image'));
-        // dd($path);
-        $url = Storage::url($path);
-        // dd($postData);
-        // dd($slug);
        
         Post::create([
             'title' => $postData['title'],
@@ -53,10 +47,11 @@ class PostController extends Controller
             'created_at' => $postData['createdat'],
             'user_id'=>$postData['post_creator'],
             'slug' => $slug,
-            'image_path' => $url,
+            'image_path' => $imageName,
         ]);
        
         $posts = Post::all();
+        $request->image->move(public_path('image'), $imageName);
 
          return view('posts.index',['allPosts' => $posts]);
     }
@@ -85,29 +80,15 @@ class PostController extends Controller
         ]);
     }
 
-    // public function update($id,Request $request){
-
-    //     $post=$request->all();
-    //     // dd($post);
-    //     Post::where('id', $id)
-    //     ->update([
-    //         'title' => $post['title'],
-    //         'discription' => $post['discription'],
-    //         'user_id' => $post['post_creator'],
-    //         'created_at' => $post['created_at'],
-            
-    //     ]);
-
-    //     $posts = Post::all();
-
-    //     return view('posts.index',['allPosts' => $posts]);
-
-    // }
+    
     public function update($post,UpdatePostRequest $request){
+        $imageName = time().'.'.$request->image->extension();
+        // dd($imageName);
         $postToUpdate = post::findOrFail($post);
         $data=request()->all();
-        $path = Storage::putFile('public', request()->file('image'));
-        $url = Storage::url($path);
+        // $path = Storage::putFile('public', request()->file('image'));
+        // $url = Storage::url($path);
+
         $slug = SlugService::createSlug(Post::class, 'slug', $postToUpdate['title']);
         $postToUpdate->update([
             'title' => $request->title,
@@ -115,9 +96,9 @@ class PostController extends Controller
             'created_at' => $request->created_at,
             'user_id' => $request->post_creator,
             'slug' => $slug,
-            'image_path' => $url,
+            'image_path' => $imageName,
         ]);
-
+        $request->image->move(public_path('image'), $imageName);
         // return to_route('posts.index');
         return redirect()->route('posts.index');
         
@@ -127,10 +108,10 @@ class PostController extends Controller
     public function destroy ($post){
 
         $postToDelete = Post::findOrFail($post);
-        $location =  $singlePost->image_path;
+        $location =  $postToDelete->image_path;
         $imageName = basename($location);
 
-        $imageURL = "images" . '\\' . $imageName;
+        $imageURL = "image" . '\\' . $imageName;
         unlink($imageURL);
         $postToDelete->Comments()->delete();
         $postToDelete->delete();

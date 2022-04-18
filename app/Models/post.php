@@ -22,7 +22,7 @@ class post extends Model
     {
         return $this->getSlugKeyName();
     }
-    protected $fillable = ['title','discription','created_at','user_id'];
+    protected $fillable = ['title','discription','created_at','user_id','slug','image_path'];
 
     public function user()
     {

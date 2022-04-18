@@ -34,12 +34,14 @@
   </div>
 </div>
 {{-- image --}}
+
 <div class="card my-4">
   <div class="card-header fw-bold fs-1">
       Image
   </div>
+  {{-- @dd($posts) --}}
   <div class="card-body ">
-      <img src="{{$posts['image_path']}}" alt="{{$posts['title']}}" class="img-fluid">
+      <img src="{{ asset('image/'.$posts->image_path) }}" alt={{$posts->title."image"}} />
   </div>
 </div>
 {{-- comments --}}
